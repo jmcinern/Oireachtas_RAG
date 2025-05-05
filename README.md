@@ -8,5 +8,9 @@ TODO:
 - Web app deployment.
 - Further refining of prompt engineering, especially in cases where there are few relevant quotes.
 
-Example output: 
-Leo Varadkar acknowledges that 'the very real housing crisis we face in this country is a disaster for many people' (2022, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2022-06-16/debate/mul@/main.xml). He emphasizes that 'the causes of the housing crisis are multifactorial' and rejects simplistic explanations or blaming the Opposition (2023, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2023-04-25/debate/mul@/main.xml). Varadkar criticizes objections to housing developments, stating 'we cannot fix the housing crisis without increased supply of all types of housing' (2023, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2023-04-25/debate/mul@/main.xml). Additionally, he notes efforts 'to come up with new and more dramatic language to describe the housing situation' (2023, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2023-03-29/debate/mul@/main.xml).
+Sample: 
+
+- Leo Varadkar on the Housing Crisis 
+
+
+> Leo Varadkar acknowledges that 'the very real housing crisis we face in this country is a disaster for many people' (2022, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2022-06-16/debate/mul@/main.xml). He emphasizes that 'the causes of the housing crisis are multifactorial' and rejects simplistic explanations or blaming the Opposition (2023, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2023-04-25/debate/mul@/main.xml). Varadkar criticizes objections to housing developments, stating 'we cannot fix the housing crisis without increased supply of all types of housing' (2023, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2023-04-25/debate/mul@/main.xml). Additionally, he notes efforts 'to come up with new and more dramatic language to describe the housing situation' (2023, https://data.oireachtas.ie/akn/ie/debateRecord/dail/2023-03-29/debate/mul@/main.xml).
