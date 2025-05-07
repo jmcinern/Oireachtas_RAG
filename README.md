@@ -4,7 +4,8 @@
 - This project has also become an area of interest for research at Trinity College Dublin.
  
 TODO:
-- URL storage and retrieval.
+- URLs added to S3 db
+- hyperlink in output
 - Web app deployment.
 - Further refining of prompt engineering, especially in cases where there are few relevant quotes.
 
