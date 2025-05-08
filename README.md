@@ -1,6 +1,7 @@
-# Current Functionality (Not Deployed).
+# Current Functionality (Not Deployed)(Image).
 
-![image](https://github.com/user-attachments/assets/8e96c5b0-df87-4649-b49d-7d639b075e34)
+![image](https://github.com/user-attachments/assets/0b27f173-ef64-433a-9b51-300a8751fea1)
+
 
 # Overview
 - RAG model to query Dáil debates. This is a personal project. I came across the Oireachtas database and API: https://data.oireachtas.ie/ and saw the availibilty of information.
