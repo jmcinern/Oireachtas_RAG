@@ -29,6 +29,13 @@ from langchain.prompts import (
     FewShotChatMessagePromptTemplate
 )
 from langchain_community.chat_models import ChatOpenAI
+from thefuzz import process
+import spacy
+# Load the spaCy model for NLP tasks and cache
+nlp = spacy.load("en_core_web_sm")
+
+
+
 #st.write("SECRETS DIAGNOSTIC:", st.secrets)
 
 # 1. Load your OpenAI key from Streamlit secrets
@@ -116,16 +123,14 @@ def search_speaker_position(speaker_name, topic, num_results=5):
         out += f"\n**Quote {i} (source: {url}):** {text}...\n"
     return out
 
-def speaker_fuzzy_lookup(speaker, speaker_list):
-    return process.extractOne(speaker, speaker_list)[0]
+
 
 def generate_answer(speaker_name, topic, list_of_speakers):
-    sp = speaker_fuzzy_lookup(speaker_name, list_of_speakers)
-    quotes = search_speaker_position(sp, topic)
+    quotes = search_speaker_position(speaker_name, topic)
     if quotes.startswith("No speeches found"):
         return quotes
     resp = chain_nano.invoke({
-        "question": f"Summarise {sp}'s position on {topic} using these quotes: {quotes}",
+        "question": f"Summarise {speaker_name}'s position on {topic} using these quotes: {quotes}",
         "answer": ""
     })
     return resp.content
@@ -134,16 +139,31 @@ def generate_answer(speaker_name, topic, list_of_speakers):
 # 6. Streamlit UI
 def main():
     st.title("Dáil Speeches Explorer")
-    speaker = st.text_input("Speaker Name", placeholder="e.g. Micheál Martin")
-    topic   = st.text_input("Topic",         placeholder="e.g. housing, Brexit…")
-
-    if st.button("Search"):
-        if not speaker or not topic:
-            st.warning("Please enter both a speaker and a topic.")
+    # get user input
+    input = st.text_input("Question", placeholder="What has Leo Varadkar said regarding the housing crisis?")
+    if input:
+        spacy_doc = nlp(input)
+        # extract named entities
+        entities = [ent.text for ent in spacy_doc.ents if ent.label_ == "PERSON"]
+        speaker_name = "not found"
+        for entity in entities:
+            # find closest match between SPEAKERS and input
+            speaker_name = match_speaker(input, SPEAKERS, 80)
+        # not found
+        if speaker_name == "not found":
+            st.error("Speaker not found. Please check the spelling or try a different name.")
+            # print list of speakers
+            st.write("Available speakers:")
+            st.write(", ".join(sorted(SPEAKERS)))
+        # found
         else:
-            with st.spinner("🔍 Fetching quotes…"):
-                answer = generate_answer(speaker, topic, SPEAKERS)
-            st.markdown(answer)
+            st.write(f"Summarising for {speaker_name}, please wait...")
+            with st.spinner("Generating response..."):
+                answer = generate_answer(speaker_name, input, SPEAKERS)
+            st.write(answer)
+        
+
+    
 
 if __name__ == "__main__":
     main()
