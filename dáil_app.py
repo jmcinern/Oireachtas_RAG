@@ -36,33 +36,39 @@ from langchain_community.chat_models import ChatOpenAI
 
 # 2. Download & cache the ChromaDB vector store from S3
 @st.cache_resource
-def download_debate_db_from_s3(bucket_name, s3_prefix, local_dir):
-    if not os.path.exists(local_dir):
-        os.makedirs(local_dir, exist_ok=True)
-    aws_id = st.secrets["aws"]["aws_access_key_id"]
-    aws_key = st.secrets["aws"]["aws_secret_access_key"]
-    s3 = boto3.client(
-    "s3",
-    aws_access_key_id=aws_id,
-    aws_secret_access_key=aws_key,
+def download_debate_db_from_s3(bucket_name: str, s3_prefix: str, local_dir: str) -> str:
+    os.makedirs(local_dir, exist_ok=True)
+
+    aws_access_key_id     = st.secrets["aws"]["aws_access_key_id"]
+    aws_secret_access_key = st.secrets["aws"]["aws_secret_access_key"]
+
+    s3_resource = boto3.resource(
+        "s3",
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
     )
-    paginator = s3.get_paginator("list_objects_v2")
-    for page in paginator.paginate(Bucket=bucket_name, Prefix=s3_prefix):
-        for obj in page.get("Contents", []):
-            rel = os.path.relpath(obj["Key"], s3_prefix)
-            dst = os.path.join(local_dir, rel)
-            os.makedirs(os.path.dirname(dst), exist_ok=True)
-            if not os.path.exists(dst):
-                s3.download_file(bucket_name, obj["Key"], dst)
+    bucket = s3_resource.Bucket(bucket_name)
+
+    for obj in bucket.objects.filter(Prefix=s3_prefix):
+        key = obj.key
+        if key.endswith("/"):
+            continue
+        rel_path = key[len(s3_prefix) : ]
+        local_path = os.path.join(local_dir, rel_path)
+        local_subdir = os.path.dirname(local_path)
+        if not os.path.exists(local_subdir):
+            os.makedirs(local_subdir, exist_ok=True)
+        bucket.download_file(Key=key, Filename=local_path)
+
     return local_dir
 
 debate_db_path = download_debate_db_from_s3(
     bucket_name="joebucketai",
-    s3_prefix="debate_db/",
-    local_dir="/tmp/debate_db/"
+    s3_prefix="debate_db_urls/debate_db/",
+    local_dir="D:/tmp/debate_db/"
 )
 chroma_client = chromadb.PersistentClient(path=debate_db_path)
-collection     = chroma_client.get_collection("oireachtas_debates")
+collection = chroma_client.get_or_create_collection("oireachtas_debates")
 
 # 3. Few-shot prompt setup
 example_prompt = ChatPromptTemplate.from_messages([
