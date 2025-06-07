@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Oireachtas RAG</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/javascript">
+    const { useState } = React;
+    function App() {
+      const [speaker, setSpeaker] = useState('');
+      const [topic, setTopic] = useState('');
+      const [answer, setAnswer] = useState('');
+      const submit = async () => {
+        const res = await axios.post('/generate', { speaker, topic });
+        setAnswer(res.data.answer);
+      };
+      return React.createElement('div', null,
+        React.createElement('h2', null, 'Oireachtas RAG'),
+        React.createElement('input', {
+          placeholder: 'Speaker', value: speaker,
+          onChange: e => setSpeaker(e.target.value)
+        }),
+        React.createElement('input', {
+          placeholder: 'Topic', value: topic,
+          onChange: e => setTopic(e.target.value)
+        }),
+        React.createElement('button', { onClick: submit }, 'Ask'),
+        React.createElement('pre', null, answer)
+      );
+    }
+    ReactDOM.render(React.createElement(App), document.getElementById('root'));
+  </script>
+</body>
+</html>
