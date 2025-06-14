@@ -7,6 +7,11 @@ TODO:
 - Web app deployment.
 - Further refining of prompt engineering, especially in cases where there are few relevant quotes.
 
+# UI
+
+![image](https://github.com/user-attachments/assets/cab74b97-8ef4-46b1-8322-10afff2510b5)
+
+
 Sample: 
 
 - Leo Varadkar on the Housing Crisis 
